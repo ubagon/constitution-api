@@ -9,7 +9,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Dropbox API: files/download
     const r = await fetch("https://content.dropboxapi.com/2/files/download", {
       method: "POST",
       headers: {
@@ -18,12 +17,14 @@ export default async function handler(req, res) {
       },
     });
 
+    // ここでDropboxのステータスを出力
     if (!r.ok) {
-      const body = await r.text().catch(() => "");
+      const text = await r.text().catch(() => "");
       return res.status(502).json({
         error: "Dropbox fetch failed",
         dropbox_status: r.status,
-        dropbox_body: body,
+        dropbox_statusText: r.statusText,
+        dropbox_body: text,
       });
     }
 
